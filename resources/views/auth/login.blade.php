@@ -43,7 +43,7 @@
                 </a>
             @endif
 
-            <x-primary-button class="ml-3" style="background-color: #F5F5F5;">
+            <x-primary-button class="ml-3" style="background-color: green;">
                 {{ __('ログイン') }}
             </x-primary-button>
         </div>

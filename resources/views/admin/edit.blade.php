@@ -7,13 +7,13 @@
             <h2 style="font-size:1rem;">商品更新画面</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-success" href="{{ url('/items') }}">戻る</a>
+            <a class="btn btn-success" href="{{ url('/admin/items') }}">戻る</a>
         </div>
     </div>
 </div>
  
 <div style="text-align:right;">
-<form action="{{ route('item.update',$item->id) }}" method="POST">
+<form action="{{ route('admin.item.update',$item->id) }}" method="POST">
     @method('PUT')
     @csrf
      

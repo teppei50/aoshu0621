@@ -46,8 +46,8 @@ class JuchuController extends Controller
             ->paginate(5);  
             return view('juchu.index', compact('juchus'))
             ->with('user_name', \Auth::user()->name)
-            ->with('page_id', request()->page_id)
-            ->with('i', (request()->input('page', 1)- 1)* 5);
+            ->with('page', request()->page)
+            ->with('i', (request()->input('page', 1)- 1)* 5);//使ってないかも
     }
 
 
@@ -60,11 +60,9 @@ class JuchuController extends Controller
         {
             $items = Item::all();
             $kyakusakis = kyakusaki::all();
-            return view('juchu.create')
-                ->with('items',$items)
-                ->with('kyakusakis',$kyakusakis);
+            return view('juchu.create', compact('items','kyakusakis'));
+     
         }
-
         /**
          * Store a newly created resource in storage.
          *
@@ -72,7 +70,7 @@ class JuchuController extends Controller
          * @return \Illuminate\Http\Response
          */
         public function store(Request $request)
-        {
+        { //uddateとまとめる
             $request->validate([
                 'kyakusaki_id' => 'required|integer',
                 'item_id' => 'required|integer',
@@ -113,11 +111,7 @@ class JuchuController extends Controller
             $items = Item::all();
             $kyakusakis = Kyakusaki::all();
             $joutais = Joutai::all();
-            return view('juchu.edit', compact('juchu'))
-                ->with('items', $items)
-                ->with('joutais', $joutais)
-                ->with('kyakusakis', $kyakusakis);
-                
+            return view('juchu.edit', compact('juchu','items','joutais','kyakusakis'));
         }
 
         /**
@@ -128,7 +122,7 @@ class JuchuController extends Controller
          * @return \Illuminate\Http\Response
          */
         public function update(Request $request, Juchu $juchu)
-        {
+        {//storeと一緒なのでまとめる
             $request->validate([
                 'kyakusaki_id' => 'required|integer',
                 'item_id' => 'required|integer',
@@ -153,7 +147,7 @@ class JuchuController extends Controller
          */
         public function destroy(Juchu $juchu)
         {
-            $item->delete();
+            $juchu->delete();
             return redirect()->route('juchu.index')
                 ->with('success', '受注ID'.$juchu->id.'を削除しました');
         }

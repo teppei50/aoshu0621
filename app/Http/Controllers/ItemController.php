@@ -13,9 +13,8 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //$items = Item::latest()->paginate(5);
         $items = Item::select([
             'b.id',
             'b.name',
@@ -28,7 +27,6 @@ class ItemController extends Controller
         ->join('bunruis as r', function($join) {
             $join->on('b.bunrui', '=', 'r.id');
         })
-        
         ->orderBy('b.id', 'DESC')
         ->paginate(5);  
 
@@ -37,12 +35,12 @@ class ItemController extends Controller
             if (\Auth::check()) {
                 return view('index', compact('items'))
                     ->with('user_name', \Auth::user()->name)
-                    ->with('page_id', request()->page_id)
+                    ->with('page', request()->page)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
             } else {
                 return view('index', compact('items'))
                     ->with('user_name', null)
-                    ->with('page_id', request()->page_id)
+                    ->with('page', request()->page)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
             }
     }
@@ -56,9 +54,9 @@ class ItemController extends Controller
     {
         //bunruiテーブルのデータすべて渡す
         $bunruis = Bunrui::all();
-        return view('create', compact('bunruis'))
+        return view('create', compact('bunruis'));
         //bunruisテーブルのデータを一緒に表示
-            ->with('bunruis', $bunruis);
+            // ->with('bunruis', $bunruis);
         
     }
 
@@ -96,11 +94,11 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function show(Item $item)
+    public function show(Request $request, Item $item)
     {
-        $bunruis = Bunrui::all();
-        $page_id = request()->page_id; // ページIDを取得する
-    return view('show', compact('item', 'bunruis', 'page_id'));
+        $bunruis = Bunrui::find($item->bunrui);
+        $page = request()->page; // ページIDを取得する
+        return view('show', compact('item', 'bunruis', 'page'));
     }
     /**
      * Show the form for editing the specified resource.
@@ -109,10 +107,9 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Item $item)
-     {
+    {
         $bunruis = Bunrui::all();
-        return view('edit', compact('item'))
-            ->with('bunruis', $bunruis);
+        return view('edit', compact('item', 'bunruis'));
     }
 
     /**
@@ -123,7 +120,7 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Item $item)
-{
+    {
     $request->validate([
         'name' => 'required|max:20',
         'kakaku' => 'required|integer',
@@ -139,7 +136,7 @@ class ItemController extends Controller
     $item->save();
 
         return redirect()->route('item.index')
-            ->with('success', '受注入力を変更しました');;
+            ->with('success', '受注入力を変更しました');
     }
 
     /**
