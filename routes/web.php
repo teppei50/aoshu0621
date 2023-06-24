@@ -74,7 +74,7 @@ Route::delete('/juchus/{juchu}', 'App\Http\Controllers\JuchuController@destroy')
 
 //admin用
 
-Route::get('/admin/items', 'App\Http\Controllers\ItemController@index')->name('admin.item.index');
+Route::get('/admin/items', 'App\Http\Controllers\ItemController@index')->name('admin.index');
 
 Route::get('/admin/items/create', 'App\Http\Controllers\ItemController@create')->name('admin.item.create');
 Route::post('/admin/items/store', 'App\Http\Controllers\ItemController@store')->name('admin.item.store');
@@ -84,13 +84,10 @@ Route::put('/admin/items/edit/{item}', 'App\Http\Controllers\ItemController@upda
 
 Route::get('/admin/items/show/{item}', 'App\Http\Controllers\ItemController@show')->name('admin.item.show');
 
-Route::middleware('auth:admin')->group(function () {
-    Route::delete('/admin/items/{item}', 'App\Http\Controllers\ItemController@destroy')->name('admin.item.destroy');
-});
-
+Route::delete('/admin/juchus/{juchu}', 'App\Http\Controllers\JuchuController@destroy')->name('admin.juchu.destroy');
     
 
-Route::get('/admin/juchus', 'App\Http\Controllers\JuchuController@index')->name('admin.juchu.index');  
+Route::get('/admin/juchus', 'App\Http\Controllers\JuchuController@index')->name('admin.index');  
 
 Route::get('/admin/juchus/create', 'App\Http\Controllers\JuchuController@create')->name('admin.juchu.create');
 Route::post('/admin/juchus/store', 'App\Http\Controllers\JuchuController@store')->name('admin.juchu.store');
